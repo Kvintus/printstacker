@@ -2,8 +2,10 @@
 
 import { Minus, Plus } from "lucide-react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useMemo, useRef, useState, useSyncExternalStore } from "react";
 
+import { AppTour } from "@/components/app-tour";
 import { ColorPicker } from "@/components/color-picker";
 import { LogoMark } from "@/components/logo-mark";
 import { Badge } from "@/components/ui/badge";
@@ -164,6 +166,7 @@ function IntegerStepper({
 
 export default function HomePage() {
   const fileInput = useRef<HTMLInputElement>(null);
+  const [tourReplaySignal, setTourReplaySignal] = useState(0);
   const [loaded, setLoaded] = useState<LoadedModel | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -223,7 +226,9 @@ export default function HomePage() {
   }
 
   return (
-    <div
+    <>
+      <AppTour replaySignal={tourReplaySignal} />
+      <div
       className="flex h-full min-h-0 bg-background text-foreground"
       onDragOver={(event) => {
         event.preventDefault();
@@ -245,11 +250,25 @@ export default function HomePage() {
       }}
     >
       <aside className="flex h-full w-80 shrink-0 flex-col border-r border-border">
-        <div className="flex h-12 items-center px-3">
+        <div className="flex h-12 items-center justify-between px-3">
           <h1 className="flex items-center gap-2 text-sm font-medium tracking-tight">
             <LogoMark className="size-4 shrink-0" />
             Print Stacker
           </h1>
+          <nav className="flex items-center gap-2">
+            <Link
+              href="/about"
+              className="text-xs text-muted-foreground transition-colors hover:text-primary"
+            >
+              About
+            </Link>
+            <Link
+              href="/guide"
+              className="text-xs text-muted-foreground transition-colors hover:text-primary"
+            >
+              Guide
+            </Link>
+          </nav>
         </div>
         <Separator />
         <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-3">
@@ -260,6 +279,7 @@ export default function HomePage() {
             <CardContent className="grid gap-2">
               <button
                 type="button"
+                data-tour="upload"
                 onClick={() => fileInput.current?.click()}
                 className={`rounded-lg border border-dashed px-3 py-6 text-center text-xs text-muted-foreground transition-colors hover:bg-muted/40 ${
                   dragOver ? "border-foreground bg-muted/50" : "border-border"
@@ -287,7 +307,7 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          <Card size="sm">
+          <Card size="sm" data-tour="process">
             <CardHeader>
               <CardTitle>Process</CardTitle>
             </CardHeader>
@@ -372,7 +392,7 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          <Card size="sm">
+          <Card size="sm" data-tour="stack">
             <CardHeader>
               <CardTitle>Stack</CardTitle>
             </CardHeader>
@@ -435,7 +455,7 @@ export default function HomePage() {
           </Card>
         </div>
 
-        <div className="border-t border-border p-3">
+        <div className="border-t border-border p-3" data-tour="download">
           {downloadName ? (
             <p className="mb-2 truncate font-mono text-[11px] text-muted-foreground">
               {downloadName}
@@ -449,6 +469,7 @@ export default function HomePage() {
 
       <section className="flex min-w-0 flex-1 flex-col">
         <div
+          data-tour="preview"
           className={`relative min-h-0 flex-1 border-b border-border ${
             dragOver ? "outline outline-1 outline-foreground" : ""
           }`}
@@ -483,5 +504,6 @@ export default function HomePage() {
         </div>
       </section>
     </div>
+    </>
   );
 }
