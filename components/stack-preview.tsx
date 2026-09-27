@@ -175,7 +175,7 @@ export function StackPreview({ mesh, layout, color }: StackPreviewProps) {
   return (
     <Canvas
       camera={{ fov: 35, position: [220, 160, 220], near: 0.1, far: 20000 }}
-      dpr={[1, 2]}
+      dpr={Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 2)}
       gl={{ antialias: true }}
     >
       <color attach="background" args={["#09090b"]} />
