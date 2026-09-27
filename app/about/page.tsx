@@ -10,6 +10,7 @@ import {
 import Link from "next/link";
 
 import { SiteShell } from "@/components/site-shell";
+import { pageMetadata } from "@/lib/site";
 import { StackDiagram } from "@/components/stack-diagram";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,11 +22,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export const metadata: Metadata = {
-  title: "About — Print Stacker",
+export const metadata: Metadata = pageMetadata({
+  title: "About vertical stack printing",
   description:
-    "What Print Stacker is, where the idea came from, and why vertical stack printing works.",
-};
+    "What Print Stacker is, where the idea came from, and why a layer-aligned gap lets you iron each copy before the next one starts.",
+  path: "/about",
+});
 
 const features = [
   {

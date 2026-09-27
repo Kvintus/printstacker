@@ -251,10 +251,17 @@ export default function HomePage() {
     >
       <aside className="flex h-full w-80 shrink-0 flex-col border-r border-border">
         <div className="flex h-12 items-center justify-between px-3">
-          <h1 className="flex items-center gap-2 text-sm font-medium tracking-tight">
-            <LogoMark className="size-4 shrink-0" />
-            Print Stacker
-          </h1>
+          <div className="grid gap-0.5">
+            <h1 className="flex items-center gap-2 text-sm font-medium tracking-tight">
+              <LogoMark className="size-4 shrink-0" />
+              Print Stacker
+            </h1>
+            <p className="sr-only">
+              Stack copies of an STL into a downloadable 3MF for Bambu Studio or
+              any slicer. The file is parsed in the browser and nothing is
+              uploaded.
+            </p>
+          </div>
           <nav className="flex items-center gap-2">
             <Button
               type="button"
