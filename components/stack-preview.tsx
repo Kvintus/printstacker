@@ -33,6 +33,28 @@ function yUpPositions(positions: Float32Array): Float32Array {
   return converted;
 }
 
+/** STL facets are flat; duplicate vertices per triangle so creases stay sharp. */
+function buildPreviewGeometry(mesh: TriangleMesh): THREE.BufferGeometry {
+  const { positions, indices } = mesh;
+  const expanded = new Float32Array(indices.length * 3);
+  for (let tri = 0; tri < indices.length; tri += 3) {
+    for (let corner = 0; corner < 3; corner += 1) {
+      const src = indices[tri + corner] * 3;
+      const dst = tri * 3 + corner * 3;
+      expanded[dst] = positions[src];
+      expanded[dst + 1] = positions[src + 1];
+      expanded[dst + 2] = positions[src + 2];
+    }
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(yUpPositions(expanded), 3),
+  );
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
 function FrameStack({ mesh }: { mesh: TriangleMesh }) {
   const camera = useThree((state) => state.camera);
   const controls = useThree((state) => state.controls) as OrbitTarget | null;
@@ -109,16 +131,7 @@ function GapHighlights({
 
 function StackInstances({ mesh, layout, color }: StackPreviewProps) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
-  const geometry = useMemo(() => {
-    const next = new THREE.BufferGeometry();
-    next.setAttribute(
-      "position",
-      new THREE.BufferAttribute(yUpPositions(mesh.positions), 3),
-    );
-    next.setIndex(new THREE.BufferAttribute(mesh.indices, 1));
-    next.computeVertexNormals();
-    return next;
-  }, [mesh.indices, mesh.positions]);
+  const geometry = useMemo(() => buildPreviewGeometry(mesh), [mesh]);
 
   useLayoutEffect(() => {
     return () => {
@@ -150,7 +163,8 @@ function StackInstances({ mesh, layout, color }: StackPreviewProps) {
       <meshStandardMaterial
         color={color}
         metalness={0}
-        roughness={0.72}
+        roughness={0.88}
+        flatShading
         side={THREE.DoubleSide}
       />
     </instancedMesh>
