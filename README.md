@@ -1,6 +1,6 @@
 # Print Stacker
 
-Stack copies of an STL into a 3MF you can open in a slicer. The file is parsed and packed in the browser; nothing is uploaded.
+[printstacker.vercel.app](https://printstacker.vercel.app) — stack copies of an STL into a 3MF you can open in a slicer. The file is parsed and packed in the browser; nothing is uploaded.
 
 Each copy sits on the build plate, centered, with a gap of one to three layer heights between copies. The gap keeps every copy on a whole layer, so the top of the lower part can be ironed before the next one starts.
 
