@@ -57,6 +57,9 @@ pnpm lint
 | Path | Role |
 | --- | --- |
 | `app/page.tsx` | Upload, process controls, and download |
+| `app/about/page.tsx` | About page |
+| `app/guide/page.tsx` | User guide and documentation |
+| `components/site-shell.tsx` | Shared layout for About and Guide |
 | `components/stack-preview.tsx` | Three.js preview of the stack |
 | `lib/stl.ts` | Binary and ASCII STL parser |
 | `lib/stack.ts` | Copy spacing and plate placement |
