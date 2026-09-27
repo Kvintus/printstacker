@@ -75,6 +75,11 @@ function isTourComplete(): boolean {
   }
 }
 
+function styleSkipButton(popover: { closeButton: HTMLButtonElement }) {
+  popover.closeButton.textContent = "Skip";
+  popover.closeButton.setAttribute("aria-label", "Skip tour");
+}
+
 function createTourDriver(): Driver {
   const driverObj = driver({
     showProgress: true,
@@ -84,6 +89,9 @@ function createTourDriver(): Driver {
     doneBtnText: "Done",
     popoverClass: "printstacker-tour-popover",
     steps: TOUR_STEPS,
+    onPopoverRender: (popover) => {
+      styleSkipButton(popover);
+    },
     onDestroyStarted: () => {
       markTourComplete();
       driverObj.destroy();

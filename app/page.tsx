@@ -256,6 +256,15 @@ export default function HomePage() {
             Print Stacker
           </h1>
           <nav className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-7 px-2 text-xs text-muted-foreground"
+              onClick={() => setTourReplaySignal((current) => current + 1)}
+            >
+              Tour
+            </Button>
             <Link
               href="/about"
               className="text-xs text-muted-foreground transition-colors hover:text-primary"
