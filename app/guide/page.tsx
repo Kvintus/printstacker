@@ -10,7 +10,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { JsonLd } from "@/components/json-ld";
 import { SiteShell } from "@/components/site-shell";
+import { pageMetadata } from "@/lib/site";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,11 +24,12 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-export const metadata: Metadata = {
-  title: "Guide — Print Stacker",
+export const metadata: Metadata = pageMetadata({
+  title: "How to stack an STL into a 3MF",
   description:
-    "How to use Print Stacker: upload an STL, configure the stack, and download a 3MF.",
-};
+    "Vertical stack printing in the browser: upload an STL, set a one-to-three layer gap, and download a Bambu Studio or generic 3MF.",
+  path: "/guide",
+});
 
 const steps = [
   {
@@ -79,9 +82,51 @@ const formulas = [
   },
 ] as const;
 
+const faqs = [
+  {
+    question: "Does Print Stacker upload my STL?",
+    answer:
+      "No. Parsing, the 3D preview, and the 3MF download all run in the browser. The file stays on your device.",
+  },
+  {
+    question: "What is vertical stack printing?",
+    answer:
+      "Copies of the same part sit on top of each other with a thin gap, so one sliced job prints the whole batch. The gap is one to three layer heights, which keeps every copy on a whole layer.",
+  },
+  {
+    question: "Why leave a gap between copies?",
+    answer:
+      "The gap is wide enough for the slicer to iron the top of the lower copy before the next copy starts. After printing, the copies pull apart at that gap.",
+  },
+  {
+    question: "Should I export Bambu Studio or a generic 3MF?",
+    answer:
+      "Use Bambu Studio when you slice in Bambu Studio. That file includes the placed copies, layer height, and top ironing. Use generic 3MF for other slicers, then set layer height and ironing there yourself.",
+  },
+  {
+    question: "How tall can the stack be?",
+    answer:
+      "You can stack 2 to 20 copies. Above 250 mm total height, the status bar warns that the stack may exceed a Bambu printer’s Z limit.",
+  },
+] as const;
+
 export default function GuidePage() {
   return (
     <SiteShell>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqs.map((faq) => ({
+            "@type": "Question",
+            name: faq.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: faq.answer,
+            },
+          })),
+        }}
+      />
       <div className="grid gap-14">
         <section className="grid max-w-2xl gap-4">
           <Badge variant="secondary" className="w-fit">
@@ -216,6 +261,34 @@ export default function GuidePage() {
             Layer heights follow the usual Bambu presets for 0.2, 0.4, 0.6, and
             0.8 mm nozzles. Defaults are 0.08, 0.20, 0.24, and 0.24 mm.
           </p>
+        </section>
+
+        <section className="grid gap-5">
+          <div className="grid gap-1">
+            <h2 className="text-lg font-medium tracking-tight">
+              Vertical stack printing
+            </h2>
+            <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              Vertical stack printing places identical copies in one column instead
+              of tiling them across the plate. One STL becomes many copies in a
+              single 3MF, each shifted up by the part height plus a gap of one to
+              three layer heights. That gap is the whole point: the top of the
+              lower copy can be ironed before the next copy starts, and the parts
+              still separate after the job.
+            </p>
+          </div>
+          <div className="grid gap-3">
+            {faqs.map((faq) => (
+              <Card key={faq.question} size="sm" className="bg-card/60 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle>{faq.question}</CardTitle>
+                  <CardDescription className="leading-relaxed">
+                    {faq.answer}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
         </section>
 
         <Separator />
